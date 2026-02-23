@@ -760,21 +760,37 @@ export function calculateBazi(year, month, day, hour, minute, sex) {
         const startGanIdx = monthGanStart[liuNianGan];
 
         // 获取每个月的节气日期
+        const jieQiTable = Lunar.fromYmd(liuNianYear, 6, 1).getJieQiTable();
         for (let i = 0; i < 12; i++) {
             const mGanIdx = (startGanIdx + i) % 10;
             const mGan = TIAN_GAN[mGanIdx];
             const mZhi = monthDzOrder[i];
             const gz = mGan + mZhi;
 
-            // 节气日期 - 简化用固定日期
-            const jqMonth = i < 11 ? i + 2 : 1;
-            const jqDay = [4, 5, 5, 5, 5, 7, 7, 7, 8, 7, 7, 5][i];
-            const jqYear = i < 11 ? liuNianYear : liuNianYear + 1;
+            // 节气日期 - 使用实际节气日期
+            let jqYear;
+            let jqMonth;
+            let jqDay;
+            const jqName = jieQiNames[i];
+            const jqSolar = jieQiTable ? jieQiTable[jqName] : null;
+            if (jqSolar) {
+                jqYear = jqSolar.getYear();
+                jqMonth = jqSolar.getMonth();
+                jqDay = jqSolar.getDay();
+            } else {
+                // 回退到固定日期，避免节气表缺失导致崩溃
+                jqMonth = i < 11 ? i + 2 : 1;
+                jqDay = [4, 5, 5, 5, 5, 7, 7, 7, 8, 7, 7, 5][i];
+                jqYear = i < 11 ? liuNianYear : liuNianYear + 1;
+            }
 
             months.push({
                 index: i,
-                jieQi: jieQiNames[i],
+                jieQi: jqName,
                 jieQiDate: `${jqMonth}/${jqDay}`,
+                jieQiYear: jqYear,
+                jieQiMonth: jqMonth,
+                jieQiDay: jqDay,
                 gan: mGan,
                 zhi: mZhi,
                 gz,
@@ -809,6 +825,46 @@ export function calculateBazi(year, month, day, hour, minute, sex) {
                     day: d,
                     month: liuYueMonth,
                     year: liuYueYear,
+                    weekDay: weekNames[solarDay.getWeek()],
+                    gan: dGan,
+                    zhi: dZhi,
+                    gz,
+                    ganShiShen: SHI_SHEN_TABLE[dayGan]?.[dGan] || '',
+                    zhiShiShen: SHI_SHEN_TABLE[dayGan]?.[CANG_GAN[dZhi]?.[0]] || '',
+                    shenSha: getShenSha(ec, gz),
+                });
+            } catch (e) {
+                // skip invalid dates
+            }
+        }
+        return days;
+    }
+
+    // ===== 流日（给定起止日期范围内的日柱）=====
+    function getLiuRiRange(startY, startM, startD, endY, endM, endD) {
+        const days = [];
+        const weekNames = ['日', '一', '二', '三', '四', '五', '六'];
+        const start = new Date(startY, startM - 1, startD);
+        const end = new Date(endY, endM - 1, endD);
+
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            const y = d.getFullYear();
+            const m = d.getMonth() + 1;
+            const day = d.getDate();
+            try {
+                const solarDay = Solar.fromYmd(y, m, day);
+                const lunarDay = solarDay.getLunar();
+                const ecObj = lunarDay.getEightChar();
+                const dayGz = ecObj.getDay();
+                const dGan = dayGz[0];
+                const dZhi = dayGz[1];
+                const gz = dGan + dZhi;
+
+                days.push({
+                    index: days.length,
+                    day,
+                    month: m,
+                    year: y,
                     weekDay: weekNames[solarDay.getWeek()],
                     gan: dGan,
                     zhi: dZhi,
@@ -874,6 +930,7 @@ export function calculateBazi(year, month, day, hour, minute, sex) {
         // 流月 / 流日生成函数
         getLiuYue,
         getLiuRi,
+        getLiuRiRange,
 
         // 五行旺相
         wuXingStatus: wxStatus,

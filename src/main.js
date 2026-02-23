@@ -3,7 +3,7 @@
  */
 import './style.css';
 import { calculateBazi } from './bazi.js';
-import { getUsers, addUser, updateUser, deleteUser, initDefaultCases, getUser } from './users.js';
+import { getUsers, addUser, updateUser, deleteUser, initDefaultCases, getUser, getLastSelectedUserId, setLastSelectedUserId } from './users.js';
 import { renderChart } from './render.js';
 
 // 应用状态
@@ -12,7 +12,7 @@ const appState = {
     baziData: null,
     selectedDaYun: 0,
     selectedLiuNian: 0,
-    selectedLiuYue: null, // null = auto detect current month
+    selectedLiuYue: null, // null = auto detect current liu yue
     selectedLiuRi: null, // null = auto detect current day
     userName: '',
 };
@@ -62,7 +62,9 @@ function init() {
     // 自动选择第一个用户
     const users = getUsers();
     if (users.length > 0) {
-        selectUser(users[0].id);
+        const lastSelectedId = getLastSelectedUserId();
+        const exists = lastSelectedId && users.some(u => u.id === lastSelectedId);
+        selectUser(exists ? lastSelectedId : users[0].id);
     }
 }
 
@@ -106,6 +108,7 @@ function selectUser(userId) {
 
     const user = getUser(userId);
     if (!user) return;
+    setLastSelectedUserId(userId);
 
     appState.userName = user.name;
     updateCurrentUserDisplay();
@@ -271,6 +274,7 @@ function bindEvents() {
                         selectUser(users[0].id);
                     } else {
                         appState.selectedUserId = null;
+                        setLastSelectedUserId(null);
                         updateCurrentUserDisplay();
                         chartContainer.innerHTML = `<div class="placeholder"><div class="placeholder-icon">☰</div><p>请点击右上角切换用户</p></div>`;
                     }

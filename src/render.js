@@ -25,6 +25,36 @@ function ssShort(ss) {
   return map[ss] ?? ss;
 }
 
+function addDays(year, month, day, delta) {
+  const d = new Date(year, month - 1, day);
+  d.setDate(d.getDate() + delta);
+  return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+}
+
+function dateToNumber(date) {
+  return date.year * 10000 + date.month * 100 + date.day;
+}
+
+function buildLiuYueRanges(liuYueList, liuNianYear) {
+  const ranges = [];
+  for (let i = 0; i < liuYueList.length; i++) {
+    const ly = liuYueList[i];
+    if (!ly) continue;
+    const start = { year: ly.jieQiYear, month: ly.jieQiMonth, day: ly.jieQiDay };
+    let nextStart = null;
+    if (liuYueList[i + 1]) {
+      const next = liuYueList[i + 1];
+      nextStart = { year: next.jieQiYear, month: next.jieQiMonth, day: next.jieQiDay };
+    } else if (liuNianYear != null && liuYueList[0]) {
+      const next = liuYueList[0];
+      nextStart = { year: liuNianYear + 1, month: next.jieQiMonth, day: next.jieQiDay };
+    }
+    const end = nextStart ? addDays(nextStart.year, nextStart.month, nextStart.day, -1) : start;
+    ranges.push({ start, end });
+  }
+  return ranges;
+}
+
 /**
  * 渲染专业细盘完整页面
  */
@@ -38,28 +68,36 @@ export function renderChart(container, data, state) {
   const currentLN = liuNianList[selectedLiuNian] || liuNianList[0];
   const liuYueList = currentLN ? data.getLiuYue(currentLN.gan, currentLN.year) : [];
 
-  // 找当前选中的流月 (默认当前月份)
   const now = new Date();
-  const currentMonth = now.getMonth(); // 0-indexed
-  const selectedLiuYue = state.selectedLiuYue ?? currentMonth;
+  const liuYueRanges = buildLiuYueRanges(liuYueList, currentLN?.year);
+
+  // 找当前选中的流月 (默认当天所在流月)
+  let selectedLiuYue = state.selectedLiuYue;
+  if (selectedLiuYue === null || selectedLiuYue === undefined) {
+    const today = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    selectedLiuYue = liuYueRanges.findIndex(r => {
+      const t = dateToNumber(today);
+      return t >= dateToNumber(r.start) && t <= dateToNumber(r.end);
+    });
+    if (selectedLiuYue < 0) selectedLiuYue = 0;
+  }
   const currentLY = liuYueList[selectedLiuYue] || liuYueList[0];
 
   // 流日 - 根据选中的流月计算
   let liuRiList = [];
-  let liuRiSolarMonth = null;
-  let liuRiSolarYear = null;
+  let liuRiRange = null;
   if (currentLY && currentLN) {
-    // 计算流月对应的阳历月份
-    // 流月index: 0=寅月(2月), 1=卯月(3月), ..., 10=子月(11月), 11=丑月(12月→次年1月)
-    const lyIndex = currentLY.index;
-    if (lyIndex < 11) {
-      liuRiSolarMonth = lyIndex + 2; // 寅月=2月, 卯月=3月, ...
-      liuRiSolarYear = currentLN.year;
-    } else {
-      liuRiSolarMonth = 1; // 丑月=次年1月
-      liuRiSolarYear = currentLN.year + 1;
+    liuRiRange = liuYueRanges[selectedLiuYue] || null;
+    if (liuRiRange) {
+      liuRiList = data.getLiuRiRange(
+        liuRiRange.start.year,
+        liuRiRange.start.month,
+        liuRiRange.start.day,
+        liuRiRange.end.year,
+        liuRiRange.end.month,
+        liuRiRange.end.day
+      );
     }
-    liuRiList = data.getLiuRi(liuRiSolarYear, liuRiSolarMonth);
   }
 
   // 找当前选中的流日 (默认当天或第一天)
@@ -69,11 +107,8 @@ export function renderChart(container, data, state) {
     const todayDay = now.getDate();
     const todayMonth = now.getMonth() + 1;
     const todayYear = now.getFullYear();
-    if (liuRiSolarYear === todayYear && liuRiSolarMonth === todayMonth) {
-      selectedLiuRi = todayDay - 1;
-    } else {
-      selectedLiuRi = 0;
-    }
+    const todayIndex = liuRiList.findIndex(lr => lr.year === todayYear && lr.month === todayMonth && lr.day === todayDay);
+    selectedLiuRi = todayIndex >= 0 ? todayIndex : 0;
   }
   const currentLR = liuRiList[selectedLiuRi] || liuRiList[0];
 
@@ -264,7 +299,7 @@ export function renderChart(container, data, state) {
     <div class="section-block">
       <div class="section-title-bar">
         <div class="section-title-vert"><span>流</span><span>日</span></div>
-        ${liuRiSolarYear && liuRiSolarMonth ? `<div class="section-title-sub">${liuRiSolarMonth}月</div>` : ''}
+        ${liuRiRange ? `<div class="section-title-sub">${liuRiRange.start.month}/${liuRiRange.start.day}~${liuRiRange.end.month}/${liuRiRange.end.day}</div>` : ''}
       </div>
       <div class="liuri-scroll" id="liuri-scroll">
         ${liuRiList.map((lr, idx) => {

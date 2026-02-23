@@ -2,6 +2,7 @@
  * 用户管理模块 - 基于 localStorage
  */
 const STORAGE_KEY = 'bazi_users';
+const LAST_SELECTED_USER_KEY = 'bazi_last_selected_user_id';
 
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -56,10 +57,22 @@ export function getUser(id) {
     return getUsers().find(u => u.id === id) || null;
 }
 
+export function getLastSelectedUserId() {
+    return localStorage.getItem(LAST_SELECTED_USER_KEY);
+}
+
+export function setLastSelectedUserId(id) {
+    if (id) {
+        localStorage.setItem(LAST_SELECTED_USER_KEY, id);
+    } else {
+        localStorage.removeItem(LAST_SELECTED_USER_KEY);
+    }
+}
+
 // 初始化默认案例（如果为空）
 export function initDefaultCases() {
     const users = getUsers();
     if (users.length === 0) {
-        addUser({ name: '案例7', sex: 1, year: 2024, month: 11, day: 23, hour: 13, minute: 52 });
+        addUser({ name: '案例7', sex: 1, year: 2000, month: 11, day: 23, hour: 13, minute: 52 });
     }
 }

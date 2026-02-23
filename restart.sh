@@ -11,10 +11,10 @@ log() {
   printf "[restart] %s\n" "$1"
 }
 
-# Build the Vite project first
-log "npm run build"
+# Build the Vite project with root base path (Aliyun uses its own domain)
+log "VITE_BASE=/ npm run build"
 cd "$APP_DIR"
-npm run build
+VITE_BASE=/ npm run build
 
 restart_pm2() {
   if ! command -v pm2 >/dev/null 2>&1; then

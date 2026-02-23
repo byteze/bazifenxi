@@ -25,11 +25,6 @@ const mimeTypes = {
 const server = http.createServer((req, res) => {
     let urlPath = decodeURIComponent(req.url.split('?')[0]);
 
-    // Strip base path prefix if present
-    if (urlPath.startsWith('/bazifenxi')) {
-        urlPath = urlPath.slice('/bazifenxi'.length) || '/';
-    }
-
     let filePath = path.join(distDir, urlPath);
 
     // Serve index.html for directory requests or SPA fallback

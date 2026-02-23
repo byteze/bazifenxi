@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="八字分析工具 - 专业细盘排盘，支持动态计算四柱八字、大运流年流月、十神、藏干、神煞等">
+    <title>八字分析工具 - 专业细盘</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Top Bar -->
+        <header id="top-bar">
+            <div class="top-bar-title">八字分析工具</div>
+            <div class="top-bar-right">
+                <button id="btn-switch-user" class="btn-switch-user" title="切换用户">
+                    <span id="current-user-name">选择命例</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <!-- User Dropdown -->
+                <div id="user-dropdown" class="user-dropdown hidden">
+                    <div id="user-list" class="user-list"></div>
+                    <div class="dropdown-footer">
+                        <button id="btn-add-user" class="dropdown-add-btn">＋ 新增命例</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Add/Edit Form Overlay -->
+        <div id="user-form-overlay" class="form-overlay hidden">
+            <div class="form-card">
+                <h3 id="form-title">新增命例</h3>
+                <form id="user-form">
+                    <input type="hidden" id="form-id">
+                    <div class="form-row">
+                        <label for="form-name">姓名</label>
+                        <input type="text" id="form-name" required placeholder="请输入姓名">
+                    </div>
+                    <div class="form-row">
+                        <label>性别</label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="sex" value="1" checked> 男</label>
+                            <label class="radio-label"><input type="radio" name="sex" value="0"> 女</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="form-date">出生日期</label>
+                        <input type="date" id="form-date" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="form-time">出生时间</label>
+                        <input type="time" id="form-time" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="btn-cancel" class="btn-secondary">取消</button>
+                        <button type="submit" class="btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content: Professional Chart -->
+        <main id="main-content">
+            <div id="chart-container">
+                <div id="placeholder" class="placeholder">
+                    <div class="placeholder-icon">☰</div>
+                    <p>请点击右上角切换用户</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

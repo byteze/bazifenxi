@@ -1,0 +1,1069 @@
+/* ============================================
+   八字分析工具 - 专业细盘 样式
+   ============================================ */
+
+/* ---------- CSS Variables ---------- */
+:root {
+  --wood: #40B043;
+  --fire: #C50000;
+  --soil: #8D7047;
+  --gold: #D89114;
+  --water: #3973F1;
+
+  --bg-main: #f0f1f5;
+  --bg-card: #ffffff;
+  --bg-header: #1a1a2e;
+  --bg-panel: #16162a;
+  --bg-panel-hover: #1f1f3a;
+  --bg-selected: rgba(216, 145, 20, 0.12);
+  --bg-alt-row: #f8f9fc;
+
+  --text-primary: #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-white: #f5f5f5;
+  --text-gold: #d4a843;
+
+  --border: #e5e7eb;
+  --border-light: #f0f0f0;
+  --accent: #d4a843;
+  --accent-hover: #c49a38;
+  --danger: #e74c3c;
+
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --top-bar-height: 52px;
+}
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- Top Bar ---------- */
+#top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--top-bar-height);
+  padding: 0 16px;
+  background: var(--bg-header);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.top-bar-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-gold);
+  letter-spacing: 2px;
+}
+
+.top-bar-right {
+  position: relative;
+}
+
+/* Switch User Button */
+.btn-switch-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--text-gold);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.btn-switch-user:hover {
+  background: rgba(212, 168, 67, 0.12);
+}
+
+.btn-switch-user.active {
+  background: rgba(212, 168, 67, 0.18);
+}
+
+.btn-switch-user svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.btn-switch-user.active svg {
+  transform: rotate(180deg);
+}
+
+#current-user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- User Dropdown ---------- */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  max-height: 400px;
+  background: var(--bg-panel);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dropdown-in 0.2s ease;
+  z-index: 100;
+}
+
+.user-dropdown.hidden {
+  display: none;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* User List inside dropdown */
+.user-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  color: var(--text-white);
+}
+
+.user-item:hover {
+  background: var(--bg-panel-hover);
+}
+
+.user-item.selected {
+  background: rgba(212, 168, 67, 0.15);
+  border-left: 3px solid var(--accent);
+}
+
+.user-item-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-icon {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+}
+
+.user-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 0.92rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-date {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.user-item-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 1;
+}
+
+.btn-mini {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-mini:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.btn-mini.btn-delete:hover {
+  background: rgba(231, 76, 60, 0.3);
+  color: var(--danger);
+}
+
+/* Dropdown Footer */
+.dropdown-footer {
+  padding: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-add-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropdown-add-btn:hover {
+  background: rgba(212, 168, 67, 0.1);
+}
+
+/* ---------- Form Overlay ---------- */
+.form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+}
+
+.form-overlay.hidden {
+  display: none;
+}
+
+.form-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 28px 24px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+.form-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-row label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.form-row input[type="text"],
+.form-row input[type="date"],
+.form-row input[type="time"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-row input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.12);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-label {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.radio-label input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #c49a38);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #c49a38, #b88e2f);
+}
+
+.btn-secondary {
+  background: var(--bg-alt-row);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+/* ---------- Main Content ---------- */
+#main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+#chart-container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--text-muted);
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.placeholder p {
+  font-size: 1rem;
+}
+
+/* ---------- Chart Header ---------- */
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-header);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  color: var(--text-white);
+}
+
+.header-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #e8c678);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--bg-header);
+  font-weight: 700;
+}
+
+.avatar-name {
+  font-size: 0.78rem;
+  color: var(--text-gold);
+  font-weight: 500;
+}
+
+.header-info {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tag-gender {
+  color: var(--text-gold);
+  font-weight: 600;
+}
+
+/* ---------- Professional Table ---------- */
+.pro-table-wrapper {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.pro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 680px;
+}
+
+.pro-table th,
+.pro-table td {
+  padding: 8px 6px;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.pro-table thead th {
+  background: #f5f6fa;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  position: sticky;
+  top: 0;
+}
+
+.row-label {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  background: #fafbfe;
+  min-width: 44px;
+}
+
+.row-alt {
+  background: var(--bg-alt-row);
+}
+
+.col-border {
+  border-left: 1px solid var(--border-light);
+}
+
+.col-pillar {
+  border-left: 2px solid var(--accent) !important;
+}
+
+/* GanZhi Characters */
+.gz-char {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.gz-char.wood {
+  color: var(--wood);
+}
+
+.gz-char.fire {
+  color: var(--fire);
+}
+
+.gz-char.soil {
+  color: var(--soil);
+}
+
+.gz-char.gold {
+  color: var(--gold);
+}
+
+.gz-char.water {
+  color: var(--water);
+}
+
+/* Five element text colors */
+.wood {
+  color: var(--wood);
+}
+
+.fire {
+  color: var(--fire);
+}
+
+.soil {
+  color: var(--soil);
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.water {
+  color: var(--water);
+}
+
+/* Cang Gan list */
+.cg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+}
+
+.cg-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.ss-sm {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.ss-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-left: 1px;
+}
+
+.text-sm {
+  font-size: 0.78rem;
+}
+
+/* ---------- Qi Yun Bar ---------- */
+.qiyun-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Section Block (大运/流年/流月) ---------- */
+.section-block {
+  display: flex;
+  gap: 0;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.section-title-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 8px;
+  background: linear-gradient(180deg, #f8f4eb, #f0eadb);
+  min-width: 40px;
+  border-right: 1px solid var(--border-light);
+}
+
+.section-title-vert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--soil);
+  letter-spacing: 2px;
+}
+
+.section-title-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  writing-mode: horizontal-tb;
+}
+
+/* Da Yun Scroll */
+.dayun-scroll,
+.liunian-scroll,
+.liuyue-scroll {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  flex: 1;
+  padding: 8px 4px;
+  scrollbar-width: thin;
+}
+
+.dayun-scroll::-webkit-scrollbar,
+.liunian-scroll::-webkit-scrollbar,
+.liuyue-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.dayun-scroll::-webkit-scrollbar-thumb,
+.liunian-scroll::-webkit-scrollbar-thumb,
+.liuyue-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.dayun-card,
+.liunian-card,
+.liuyue-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 10px;
+  min-width: 62px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.dayun-card:hover,
+.liunian-card:hover,
+.liuyue-card:hover {
+  background: var(--bg-alt-row);
+}
+
+.dayun-card.selected,
+.liunian-card.selected,
+.liuyue-card.selected {
+  background: var(--bg-selected);
+  border-color: var(--accent);
+}
+
+.liunian-card.current-year {
+  position: relative;
+}
+
+.liunian-card.current-year::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.dayun-year,
+.ln-year {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.dayun-age {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.dayun-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.dayun-gz,
+.ln-gz,
+.ly-gz {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.9rem;
+}
+
+.ln-xiaoyun {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  background: var(--bg-alt-row);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.ly-jq {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.ly-date {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* ---------- Liu Ri (Daily Pillar) ---------- */
+.liuri-scroll {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  flex: 1;
+  padding: 8px 4px;
+  scrollbar-width: thin;
+}
+
+.liuri-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.liuri-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.liuri-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 8px;
+  min-width: 56px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+
+.liuri-card:hover {
+  background: var(--bg-alt-row);
+}
+
+.liuri-card.selected {
+  background: var(--bg-selected);
+  border-color: var(--accent);
+}
+
+.liuri-card.current-day {
+  position: relative;
+}
+
+.liuri-card.current-day::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.lr-date {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-bottom: 1px;
+}
+
+.lr-week {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.lr-gz {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Five Elements Status ---------- */
+.wx-status-bar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.wx-tag {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.wx-tag.water {
+  background: var(--water);
+}
+
+.wx-tag.wood {
+  background: var(--wood);
+}
+
+.wx-tag.gold {
+  background: var(--gold);
+}
+
+.wx-tag.soil {
+  background: var(--soil);
+}
+
+.wx-tag.fire {
+  background: var(--fire);
+}
+
+/* ---------- Interactions ---------- */
+.interactions-box {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.interaction-row {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.interaction-row:last-child {
+  border-bottom: none;
+}
+
+.interaction-label {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--soil);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.interaction-value {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ---------- Shen Sha ---------- */
+.shensha-section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.shensha-title {
+  padding: 10px 16px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--soil);
+  background: linear-gradient(90deg, #f8f4eb, #fff);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.shensha-content {
+  padding: 12px 16px;
+}
+
+.shensha-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  align-items: flex-start;
+}
+
+.shensha-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  min-width: 48px;
+  flex-shrink: 0;
+}
+
+.shensha-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.shensha-tag {
+  padding: 2px 8px;
+  background: #f5f3ee;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border: 1px solid #ece8df;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  #chart-container {
+    padding: 12px 8px 40px;
+  }
+
+  .user-dropdown {
+    width: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-table {
+    font-size: 0.75rem;
+  }
+
+  .gz-char {
+    font-size: 1rem;
+  }
+
+  .dayun-card,
+  .liunian-card,
+  .liuyue-card,
+  .liuri-card {
+    min-width: 52px;
+    padding: 6px 6px;
+  }
+
+  .top-bar-title {
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+
+  .btn-switch-user {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    max-width: 140px;
+  }
+
+  .user-dropdown {
+    width: 240px;
+    right: -8px;
+  }
+}
+
+/* ---------- Scrollbar Styling ---------- */
+#main-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+#main-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+#main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.user-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* ---------- Dropdown Backdrop (for mobile click-outside) ---------- */
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: transparent;
+}
+
+.dropdown-backdrop.hidden {
+  display: none;
+}

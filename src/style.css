@@ -598,18 +598,19 @@ body {
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   white-space: nowrap;
 }
 
 .ss-sm {
-  font-size: 0.68rem;
+  font-size: 1rem;
   color: var(--text-muted);
 }
 
 .ss-label {
-  font-size: 0.68rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
+  font-weight: 400;
   margin-left: 1px;
 }
 
@@ -1013,7 +1014,7 @@ body {
   }
 
   .gz-char {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
   }
 
   .row-label {

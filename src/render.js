@@ -116,7 +116,7 @@ export function renderChart(container, data, state) {
             <th class="col-border">流日</th>
             <th class="col-border">流月</th>
             <th class="col-border">流年</th>
-            <th class="col-border">小运</th>
+            <th class="col-border">大运</th>
             <th class="col-border col-pillar">年柱</th>
             <th class="col-border">月柱</th>
             <th class="col-border">日柱</th>
@@ -229,7 +229,7 @@ export function renderChart(container, data, state) {
     <div class="section-block">
       <div class="section-title-bar">
         <div class="section-title-vert"><span>流</span><span>年</span></div>
-        <div class="section-title-sub">小运</div>
+        <div class="section-title-sub">大运</div>
       </div>
       <div class="liunian-scroll" id="liunian-scroll">
         ${liuNianList.map((ln, idx) => `

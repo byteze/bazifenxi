@@ -496,13 +496,13 @@ body {
 .pro-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
-  min-width: 680px;
+  font-size: 0.82rem;
+  min-width: 540px;
 }
 
 .pro-table th,
 .pro-table td {
-  padding: 8px 6px;
+  padding: 6px 3px;
   text-align: center;
   vertical-align: middle;
   border-bottom: 1px solid var(--border-light);
@@ -522,7 +522,7 @@ body {
   font-size: 0.78rem;
   font-weight: 500;
   background: #fafbfe;
-  min-width: 44px;
+  min-width: 36px;
 }
 
 .row-alt {
@@ -540,7 +540,7 @@ body {
 /* GanZhi Characters */
 .gz-char {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   display: inline-block;
 }
@@ -648,9 +648,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 8px;
+  padding: 10px 6px;
   background: linear-gradient(180deg, #f8f4eb, #f0eadb);
-  min-width: 40px;
+  min-width: 34px;
   border-right: 1px solid var(--border-light);
 }
 
@@ -702,8 +702,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 10px;
-  min-width: 62px;
+  padding: 6px 6px;
+  min-width: 52px;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.15s;
@@ -810,8 +810,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px 8px;
-  min-width: 56px;
+  padding: 5px 5px;
+  min-width: 48px;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.15s;
@@ -1001,19 +1001,39 @@ body {
 
 @media (max-width: 480px) {
   .pro-table {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    min-width: 420px;
+  }
+
+  .pro-table th,
+  .pro-table td {
+    padding: 5px 2px;
   }
 
   .gz-char {
-    font-size: 1rem;
+    font-size: 0.92rem;
+  }
+
+  .row-label {
+    min-width: 30px;
+    font-size: 0.7rem;
   }
 
   .dayun-card,
   .liunian-card,
   .liuyue-card,
   .liuri-card {
-    min-width: 52px;
-    padding: 6px 6px;
+    min-width: 44px;
+    padding: 5px 4px;
+  }
+
+  .section-title-bar {
+    min-width: 28px;
+    padding: 8px 4px;
+  }
+
+  .section-title-vert {
+    font-size: 0.8rem;
   }
 
   .top-bar-title {

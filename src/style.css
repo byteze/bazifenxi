@@ -540,8 +540,8 @@ body {
 /* GanZhi Characters */
 .gz-char {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   display: inline-block;
 }
 
@@ -763,7 +763,8 @@ body {
   display: flex;
   align-items: center;
   gap: 2px;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .ln-xiaoyun {
@@ -858,7 +859,8 @@ body {
   display: flex;
   align-items: center;
   gap: 2px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 /* ---------- Five Elements Status ---------- */
@@ -1011,7 +1013,7 @@ body {
   }
 
   .gz-char {
-    font-size: 0.92rem;
+    font-size: 1.1rem;
   }
 
   .row-label {

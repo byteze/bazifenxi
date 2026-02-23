@@ -24,11 +24,11 @@ restart_pm2() {
     log "pm2 restart $PM2_APP"
     pm2 restart "$PM2_APP"
   else
-    log "pm2 start server.js as $PM2_APP"
+    log "pm2 start server.cjs as $PM2_APP"
     if [ -n "$PORT_ENV" ]; then
-      PORT="$PORT_ENV" pm2 start "$APP_DIR/server.js" --name "$PM2_APP"
+      PORT="$PORT_ENV" pm2 start "$APP_DIR/server.cjs" --name "$PM2_APP"
     else
-      pm2 start "$APP_DIR/server.js" --name "$PM2_APP"
+      pm2 start "$APP_DIR/server.cjs" --name "$PM2_APP"
     fi
   fi
 }
@@ -47,16 +47,16 @@ restart_systemd() {
 
 restart_node() {
   mkdir -p "$APP_DIR/logs"
-  if pgrep -f "$APP_DIR/server.js" >/dev/null 2>&1; then
-    log "stop node server.js"
-    pkill -f "$APP_DIR/server.js" || true
+  if pgrep -f "$APP_DIR/server.cjs" >/dev/null 2>&1; then
+    log "stop node server.cjs"
+    pkill -f "$APP_DIR/server.cjs" || true
     sleep 1
   fi
-  log "start node server.js"
+  log "start node server.cjs"
   if [ -n "$PORT_ENV" ]; then
-    nohup env PORT="$PORT_ENV" node "$APP_DIR/server.js" > "$APP_DIR/logs/server.log" 2>&1 &
+    nohup env PORT="$PORT_ENV" node "$APP_DIR/server.cjs" > "$APP_DIR/logs/server.log" 2>&1 &
   else
-    nohup node "$APP_DIR/server.js" > "$APP_DIR/logs/server.log" 2>&1 &
+    nohup node "$APP_DIR/server.cjs" > "$APP_DIR/logs/server.log" 2>&1 &
   fi
 }
 
